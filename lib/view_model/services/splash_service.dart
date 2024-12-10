@@ -12,7 +12,12 @@ class SplashService {
       final navigator = Navigator.of(context);
       final userData = await getUserData();
 
-      if (userData.token == 'null' || userData.token == '') {
+      if (kDebugMode) {
+        print(userData.token.toString());
+      }
+
+      if (userData.token.toString() == 'null' ||
+          userData.token.toString() == '') {
         await Future.delayed(const Duration(seconds: 3));
         navigator.pushNamed(RoutesName.login);
       } else {
