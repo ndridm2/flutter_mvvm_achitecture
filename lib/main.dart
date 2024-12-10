@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          brightness: Brightness.light,
           useMaterial3: true,
         ),
         initialRoute: RoutesName.splashscreen,
