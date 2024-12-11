@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm/utils/routes/routes_name.dart';
+import 'package:mvvm/view/detail_page.dart';
 import 'package:mvvm/view/home_page.dart';
 import 'package:mvvm/view/login_page.dart';
 import 'package:mvvm/view/register_page.dart';
@@ -14,6 +15,12 @@ class Routes {
       case RoutesName.home:
         return MaterialPageRoute(
             builder: (BuildContext context) => const HomePage());
+      case RoutesName.detail:
+        final int userId = settings.arguments as int;
+        return MaterialPageRoute(
+            builder: (BuildContext context) => DetailPage(
+                  userId: userId,
+                ));
       case RoutesName.login:
         return MaterialPageRoute(
             builder: (BuildContext context) => const LoginPage());

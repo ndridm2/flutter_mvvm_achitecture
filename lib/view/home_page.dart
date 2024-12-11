@@ -16,12 +16,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  RandomuserViewModel randomuserViewModel = RandomuserViewModel();
+  final RandomuserViewModel viewModel = RandomuserViewModel();
 
   @override
   void initState() {
     super.initState();
-    randomuserViewModel.fetchRandomuserListApi();
+    viewModel.fetchRandomuserList();
   }
 
   @override
@@ -57,9 +57,11 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: ChangeNotifierProvider<RandomuserViewModel>(
-        create: (BuildContext context) => randomuserViewModel,
+        create: (BuildContext context) => viewModel,
         child: Consumer<RandomuserViewModel>(
           builder: (context, value, _) {
+            final apiResponse = value.randomuserList;
+
             switch (value.randomuserList.status) {
               case null:
               case Status.loading:
@@ -102,33 +104,39 @@ class _HomePageState extends State<HomePage> {
                   },
                 );
               case Status.completed:
+                final randomUsers = apiResponse.data?.data ?? [];
                 return ListView.builder(
-                  itemCount: value.randomuserList.data!.data!.length,
+                  itemCount: randomUsers.length,
                   itemBuilder: (context, index) {
+                    final user = randomUsers[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 6.0, horizontal: 8.0),
                       child: Card(
-                        child: ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              value.randomuserList.data!.data![index].avatar
-                                  .toString(),
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.image_not_supported,
-                                  color: Colors.grey,
-                                );
-                              },
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              RoutesName.detail,
+                              arguments: user.id,
+                            );
+                          },
+                          child: ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                user.avatar ?? '',
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(
+                                    Icons.image_not_supported,
+                                    color: Colors.grey,
+                                  );
+                                },
+                              ),
                             ),
+                            title: Text(user.email ?? 'No Email'),
+                            subtitle: Text(user.fullName),
                           ),
-                          title: Text(value
-                              .randomuserList.data!.data![index].email
-                              .toString()),
-                          subtitle: Text(value
-                              .randomuserList.data!.data![index].fullName
-                              .toString()),
                         ),
                       ),
                     );
